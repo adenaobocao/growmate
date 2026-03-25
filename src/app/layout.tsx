@@ -17,6 +17,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: "cover",
   themeColor: "#29b554",
 };
@@ -41,7 +43,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased overflow-hidden">
         <ThemeProvider>
           {children}
           <Toaster

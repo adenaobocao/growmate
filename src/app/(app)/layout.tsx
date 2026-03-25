@@ -27,8 +27,8 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="flex justify-center min-h-screen">
-      <div className="w-full max-w-[430px] min-h-screen flex flex-col relative z-10">
+    <div className="flex justify-center h-screen overflow-hidden">
+      <div className="w-full max-w-[430px] h-screen flex flex-col relative z-10 overflow-hidden">
         <Header />
         <main className="flex-1 overflow-hidden relative">
           {children}

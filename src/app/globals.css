@@ -78,15 +78,22 @@
 }
 
 @layer base {
-  html, body {
+  html {
     height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
 
   body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
     background: rgb(var(--color-bg));
     color: rgb(var(--color-text));
     font-family: "Space Grotesk", system-ui, sans-serif;
     transition: background 0.3s, color 0.3s;
+    -webkit-text-size-adjust: 100%;
+    touch-action: pan-y;
   }
 
   /* Scrollbar */

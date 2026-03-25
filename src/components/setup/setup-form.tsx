@@ -139,27 +139,33 @@ export function SetupForm({ setup }: SetupFormProps) {
         </select>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <div className="field">
-          <label htmlFor="city">Cidade</label>
-          <input
-            id="city"
-            type="text"
-            placeholder="Ex: Curitiba"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
+      <div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="field">
+            <label htmlFor="city">Cidade</label>
+            <input
+              id="city"
+              type="text"
+              placeholder="Ex: Curitiba"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="state">Estado</label>
+            <input
+              id="state"
+              type="text"
+              placeholder="Ex: PR"
+              maxLength={2}
+              value={state}
+              onChange={(e) => setState(e.target.value.toUpperCase())}
+            />
+          </div>
         </div>
-        <div className="field">
-          <label htmlFor="state">Estado</label>
-          <input
-            id="state"
-            type="text"
-            placeholder="Ex: PR"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-          />
-        </div>
+        <p className="text-[10px] text-grow-muted/70 font-medium mt-1 leading-relaxed">
+          Opcional. Usamos sua cidade para consultar dados meteorologicos (temperatura, umidade) e dar recomendacoes mais precisas para o seu cultivo.
+        </p>
       </div>
 
       <div className="field">
