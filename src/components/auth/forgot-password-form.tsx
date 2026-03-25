@@ -3,17 +3,17 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
     setLoading(true);
 
     try {
@@ -22,8 +22,11 @@ export function ForgotPasswordForm() {
       });
       if (error) throw error;
       setSent(true);
+      toast.success("Email enviado!");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Erro ao enviar email.");
+      toast.error(
+        err instanceof Error ? err.message : "Erro ao enviar email. Tente novamente."
+      );
     } finally {
       setLoading(false);
     }
@@ -31,7 +34,7 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <div className="w-full max-w-sm mx-auto text-center">
+      <div className="w-full max-w-sm mx-auto text-center animate-fade-in">
         <div className="w-16 h-16 rounded-2xl bg-grow-primary/10 border border-grow-primary/20 flex items-center justify-center mx-auto mb-5">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-grow-primary">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -39,7 +42,7 @@ export function ForgotPasswordForm() {
           </svg>
         </div>
         <h2 className="font-display text-lg font-bold text-grow-text mb-2">Email enviado!</h2>
-        <p className="text-xs text-grow-muted leading-relaxed mb-6">
+        <p className="text-body-sm leading-relaxed mb-6">
           Se <strong className="text-grow-text">{email}</strong> estiver cadastrado, voce recebera um link para redefinir sua senha.
         </p>
         <Link href="/login" className="text-xs text-grow-primary font-bold hover:underline">
@@ -51,7 +54,7 @@ export function ForgotPasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto flex flex-col gap-3">
-      <p className="text-xs text-grow-muted leading-relaxed mb-2">
+      <p className="text-body-sm leading-relaxed mb-2">
         Informe seu email e enviaremos um link para redefinir sua senha.
       </p>
 
@@ -68,14 +71,15 @@ export function ForgotPasswordForm() {
         />
       </div>
 
-      {error && (
-        <div className="text-xs text-grow-danger bg-grow-danger/10 border border-grow-danger/20 rounded-xl px-3 py-2.5 font-semibold">
-          {error}
-        </div>
-      )}
-
       <button type="submit" disabled={loading} className="btn-primary w-full mt-1">
-        {loading ? "Enviando..." : "Enviar link de recuperacao"}
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <Spinner size="sm" />
+            Enviando...
+          </span>
+        ) : (
+          "Enviar link de recuperacao"
+        )}
       </button>
 
       <div className="text-center mt-3">
