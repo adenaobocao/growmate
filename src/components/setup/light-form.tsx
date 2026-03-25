@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import { ConfirmDialog, useConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { Light } from "@/types/database";
 
 const LIGHT_TYPES = ["LED", "HPS", "CFL", "CMH", "T5", "SOLAR"];
@@ -20,6 +23,7 @@ export function LightForm({ setupId, light, onCancel }: LightFormProps) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { dialogProps, confirm } = useConfirmDialog();
 
   const [type, setType] = useState(light?.type || "LED");
   const [watts, setWatts] = useState<number | "">(light?.watts ?? "");
@@ -53,17 +57,19 @@ export function LightForm({ setupId, light, onCancel }: LightFormProps) {
         .update(payload)
         .eq("id", light.id);
       if (err) {
-        setError("Erro ao atualizar.");
+        toast.error("Erro ao atualizar luz.");
         setLoading(false);
         return;
       }
+      toast.success("Luz atualizada!");
     } else {
       const { error: err } = await supabase.from("lights").insert(payload);
       if (err) {
-        setError("Erro ao adicionar.");
+        toast.error("Erro ao adicionar luz.");
         setLoading(false);
         return;
       }
+      toast.success("Luz adicionada!");
     }
 
     router.refresh();
@@ -72,10 +78,20 @@ export function LightForm({ setupId, light, onCancel }: LightFormProps) {
 
   async function handleDelete() {
     if (!light) return;
-    if (!confirm("Remover esta luz?")) return;
+    const confirmed = await confirm({
+      title: "Remover luz",
+      description: "Tem certeza que deseja remover esta luz?",
+      variant: "danger",
+    });
+    if (!confirmed) return;
 
     const supabase = createClient();
-    await supabase.from("lights").delete().eq("id", light.id);
+    const { error } = await supabase.from("lights").delete().eq("id", light.id);
+    if (error) {
+      toast.error("Erro ao remover luz.");
+      return;
+    }
+    toast.success("Luz removida!");
     router.refresh();
     onCancel();
   }
@@ -184,9 +200,10 @@ export function LightForm({ setupId, light, onCancel }: LightFormProps) {
           disabled={loading}
           className="btn-primary flex-1 h-9 text-[10px]"
         >
-          {loading ? "Salvando..." : isEdit ? "Salvar" : "Adicionar"}
+          {loading ? <span className="flex items-center gap-1"><Spinner size="sm" /> Salvando...</span> : isEdit ? "Salvar" : "Adicionar"}
         </button>
       </div>
+      <ConfirmDialog {...dialogProps} />
     </form>
   );
 }

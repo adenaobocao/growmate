@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import { ConfirmDialog, useConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { Vent } from "@/types/database";
 
 const VENT_TYPES = [
@@ -22,7 +25,7 @@ export function VentForm({ setupId, vent, onCancel }: VentFormProps) {
   const isEdit = !!vent;
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { dialogProps, confirm } = useConfirmDialog();
 
   const [type, setType] = useState(vent?.type || "EXAUSTOR");
   const [brand, setBrand] = useState(vent?.brand || "");
@@ -32,7 +35,6 @@ export function VentForm({ setupId, vent, onCancel }: VentFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     const supabase = createClient();
 
@@ -50,17 +52,19 @@ export function VentForm({ setupId, vent, onCancel }: VentFormProps) {
         .update(payload)
         .eq("id", vent.id);
       if (err) {
-        setError("Erro ao atualizar.");
+        toast.error("Erro ao atualizar ventilacao.");
         setLoading(false);
         return;
       }
+      toast.success("Ventilacao atualizada!");
     } else {
       const { error: err } = await supabase.from("vents").insert(payload);
       if (err) {
-        setError("Erro ao adicionar.");
+        toast.error("Erro ao adicionar ventilacao.");
         setLoading(false);
         return;
       }
+      toast.success("Ventilacao adicionada!");
     }
 
     router.refresh();
@@ -69,20 +73,26 @@ export function VentForm({ setupId, vent, onCancel }: VentFormProps) {
 
   async function handleDelete() {
     if (!vent) return;
-    if (!confirm("Remover esta ventilacao?")) return;
+    const confirmed = await confirm({
+      title: "Remover ventilacao",
+      description: "Tem certeza que deseja remover esta ventilacao?",
+      variant: "danger",
+    });
+    if (!confirmed) return;
 
     const supabase = createClient();
-    await supabase.from("vents").delete().eq("id", vent.id);
+    const { error } = await supabase.from("vents").delete().eq("id", vent.id);
+    if (error) {
+      toast.error("Erro ao remover ventilacao.");
+      return;
+    }
+    toast.success("Ventilacao removida!");
     router.refresh();
     onCancel();
   }
 
   return (
     <form onSubmit={handleSubmit} className="bg-grow-surface border border-grow-border rounded-2xl p-3 space-y-1">
-      {error && (
-        <p className="text-xs text-grow-danger font-semibold">{error}</p>
-      )}
-
       <div className="grid grid-cols-2 gap-2">
         <div className="field">
           <label htmlFor="ventType">Tipo</label>
@@ -94,26 +104,13 @@ export function VentForm({ setupId, vent, onCancel }: VentFormProps) {
         </div>
         <div className="field">
           <label htmlFor="ventBrand">Marca</label>
-          <input
-            id="ventBrand"
-            type="text"
-            placeholder="Ex: AC Infinity"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
-          />
+          <input id="ventBrand" type="text" placeholder="Ex: AC Infinity" value={brand} onChange={(e) => setBrand(e.target.value)} />
         </div>
       </div>
 
       <div className="field">
         <label htmlFor="ventCfm">CFM</label>
-        <input
-          id="ventCfm"
-          type="number"
-          placeholder="Ex: 200"
-          value={cfm}
-          onChange={(e) => setCfm(e.target.value ? Number(e.target.value) : "")}
-          min={0}
-        />
+        <input id="ventCfm" type="number" placeholder="Ex: 200" value={cfm} onChange={(e) => setCfm(e.target.value ? Number(e.target.value) : "")} min={0} />
       </div>
 
       <div className="field">
@@ -132,29 +129,18 @@ export function VentForm({ setupId, vent, onCancel }: VentFormProps) {
 
       <div className="flex gap-2 pt-1">
         {isEdit && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="h-9 px-3 rounded-xl border border-grow-danger/20 bg-grow-danger/5 text-grow-danger text-[10px] font-bold cursor-pointer"
-          >
+          <button type="button" onClick={handleDelete} className="h-9 px-3 rounded-xl border border-grow-danger/20 bg-grow-danger/5 text-grow-danger text-[10px] font-bold cursor-pointer">
             Remover
           </button>
         )}
-        <button
-          type="button"
-          onClick={onCancel}
-          className="btn-ghost flex-1 h-9 text-[10px]"
-        >
+        <button type="button" onClick={onCancel} className="btn-ghost flex-1 h-9 text-[10px]">
           Cancelar
         </button>
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary flex-1 h-9 text-[10px]"
-        >
-          {loading ? "Salvando..." : isEdit ? "Salvar" : "Adicionar"}
+        <button type="submit" disabled={loading} className="btn-primary flex-1 h-9 text-[10px]">
+          {loading ? <span className="flex items-center gap-1"><Spinner size="sm" /> Salvando...</span> : isEdit ? "Salvar" : "Adicionar"}
         </button>
       </div>
+      <ConfirmDialog {...dialogProps} />
     </form>
   );
 }

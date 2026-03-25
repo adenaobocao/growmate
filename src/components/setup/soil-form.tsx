@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import { ConfirmDialog, useConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { Soil } from "@/types/database";
 
 const SOIL_TYPES = [
@@ -23,7 +26,7 @@ export function SoilForm({ setupId, soil, onCancel }: SoilFormProps) {
   const isEdit = !!soil;
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { dialogProps, confirm } = useConfirmDialog();
 
   const [type, setType] = useState(soil?.type || "SOIL");
   const [brand, setBrand] = useState(soil?.brand || "");
@@ -36,7 +39,6 @@ export function SoilForm({ setupId, soil, onCancel }: SoilFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     const supabase = createClient();
 
@@ -57,17 +59,19 @@ export function SoilForm({ setupId, soil, onCancel }: SoilFormProps) {
         .update(payload)
         .eq("id", soil.id);
       if (err) {
-        setError("Erro ao atualizar.");
+        toast.error("Erro ao atualizar substrato.");
         setLoading(false);
         return;
       }
+      toast.success("Substrato atualizado!");
     } else {
       const { error: err } = await supabase.from("soils").insert(payload);
       if (err) {
-        setError("Erro ao adicionar.");
+        toast.error("Erro ao adicionar substrato.");
         setLoading(false);
         return;
       }
+      toast.success("Substrato adicionado!");
     }
 
     router.refresh();
@@ -76,20 +80,26 @@ export function SoilForm({ setupId, soil, onCancel }: SoilFormProps) {
 
   async function handleDelete() {
     if (!soil) return;
-    if (!confirm("Remover este substrato?")) return;
+    const confirmed = await confirm({
+      title: "Remover substrato",
+      description: "Tem certeza que deseja remover este substrato?",
+      variant: "danger",
+    });
+    if (!confirmed) return;
 
     const supabase = createClient();
-    await supabase.from("soils").delete().eq("id", soil.id);
+    const { error } = await supabase.from("soils").delete().eq("id", soil.id);
+    if (error) {
+      toast.error("Erro ao remover substrato.");
+      return;
+    }
+    toast.success("Substrato removido!");
     router.refresh();
     onCancel();
   }
 
   return (
     <form onSubmit={handleSubmit} className="bg-grow-surface border border-grow-border rounded-2xl p-3 space-y-1">
-      {error && (
-        <p className="text-xs text-grow-danger font-semibold">{error}</p>
-      )}
-
       <div className="grid grid-cols-2 gap-2">
         <div className="field">
           <label htmlFor="soilType">Tipo</label>
@@ -115,39 +125,15 @@ export function SoilForm({ setupId, soil, onCancel }: SoilFormProps) {
         <label>NPK</label>
         <div className="grid grid-cols-3 gap-2 mt-1.5">
           <div>
-            <input
-              type="number"
-              placeholder="N"
-              value={nValue}
-              onChange={(e) => setNValue(e.target.value ? Number(e.target.value) : "")}
-              step="0.1"
-              min={0}
-              className="text-center"
-            />
+            <input type="number" placeholder="N" value={nValue} onChange={(e) => setNValue(e.target.value ? Number(e.target.value) : "")} step="0.1" min={0} className="text-center" />
             <span className="block text-[8px] text-grow-muted font-semibold text-center mt-0.5">N</span>
           </div>
           <div>
-            <input
-              type="number"
-              placeholder="P"
-              value={pValue}
-              onChange={(e) => setPValue(e.target.value ? Number(e.target.value) : "")}
-              step="0.1"
-              min={0}
-              className="text-center"
-            />
+            <input type="number" placeholder="P" value={pValue} onChange={(e) => setPValue(e.target.value ? Number(e.target.value) : "")} step="0.1" min={0} className="text-center" />
             <span className="block text-[8px] text-grow-muted font-semibold text-center mt-0.5">P</span>
           </div>
           <div>
-            <input
-              type="number"
-              placeholder="K"
-              value={kValue}
-              onChange={(e) => setKValue(e.target.value ? Number(e.target.value) : "")}
-              step="0.1"
-              min={0}
-              className="text-center"
-            />
+            <input type="number" placeholder="K" value={kValue} onChange={(e) => setKValue(e.target.value ? Number(e.target.value) : "")} step="0.1" min={0} className="text-center" />
             <span className="block text-[8px] text-grow-muted font-semibold text-center mt-0.5">K</span>
           </div>
         </div>
@@ -156,56 +142,28 @@ export function SoilForm({ setupId, soil, onCancel }: SoilFormProps) {
       <div className="grid grid-cols-2 gap-2">
         <div className="field">
           <label htmlFor="soilPh">pH</label>
-          <input
-            id="soilPh"
-            type="number"
-            placeholder="Ex: 6.5"
-            value={ph}
-            onChange={(e) => setPh(e.target.value ? Number(e.target.value) : "")}
-            step="0.1"
-            min={0}
-            max={14}
-          />
+          <input id="soilPh" type="number" placeholder="Ex: 6.5" value={ph} onChange={(e) => setPh(e.target.value ? Number(e.target.value) : "")} step="0.1" min={0} max={14} />
         </div>
         <div className="field">
           <label htmlFor="soilVolume">Volume (L)</label>
-          <input
-            id="soilVolume"
-            type="number"
-            placeholder="Ex: 20"
-            value={volumeLiters}
-            onChange={(e) => setVolumeLiters(e.target.value ? Number(e.target.value) : "")}
-            step="0.5"
-            min={0}
-          />
+          <input id="soilVolume" type="number" placeholder="Ex: 20" value={volumeLiters} onChange={(e) => setVolumeLiters(e.target.value ? Number(e.target.value) : "")} step="0.5" min={0} />
         </div>
       </div>
 
       <div className="flex gap-2 pt-1">
         {isEdit && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="h-9 px-3 rounded-xl border border-grow-danger/20 bg-grow-danger/5 text-grow-danger text-[10px] font-bold cursor-pointer"
-          >
+          <button type="button" onClick={handleDelete} className="h-9 px-3 rounded-xl border border-grow-danger/20 bg-grow-danger/5 text-grow-danger text-[10px] font-bold cursor-pointer">
             Remover
           </button>
         )}
-        <button
-          type="button"
-          onClick={onCancel}
-          className="btn-ghost flex-1 h-9 text-[10px]"
-        >
+        <button type="button" onClick={onCancel} className="btn-ghost flex-1 h-9 text-[10px]">
           Cancelar
         </button>
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary flex-1 h-9 text-[10px]"
-        >
-          {loading ? "Salvando..." : isEdit ? "Salvar" : "Adicionar"}
+        <button type="submit" disabled={loading} className="btn-primary flex-1 h-9 text-[10px]">
+          {loading ? <span className="flex items-center gap-1"><Spinner size="sm" /> Salvando...</span> : isEdit ? "Salvar" : "Adicionar"}
         </button>
       </div>
+      <ConfirmDialog {...dialogProps} />
     </form>
   );
 }

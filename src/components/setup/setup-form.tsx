@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import type { Setup, GrowType } from "@/types/database";
 
 const GROW_TYPES: { value: GrowType; label: string }[] = [
@@ -75,11 +77,12 @@ export function SetupForm({ setup }: SetupFormProps) {
         .eq("id", setup.id);
 
       if (updateError) {
-        setError("Erro ao atualizar setup. Tente novamente.");
+        toast.error("Erro ao atualizar setup.");
         setLoading(false);
         return;
       }
 
+      toast.success("Setup atualizado!");
       router.push(`/setup/${setup.id}`);
       router.refresh();
     } else {
@@ -90,11 +93,12 @@ export function SetupForm({ setup }: SetupFormProps) {
         .single();
 
       if (insertError || !data) {
-        setError("Erro ao criar setup. Tente novamente.");
+        toast.error("Erro ao criar setup.");
         setLoading(false);
         return;
       }
 
+      toast.success("Setup criado!");
       router.push(`/setup/${data.id}`);
       router.refresh();
     }
@@ -252,7 +256,7 @@ export function SetupForm({ setup }: SetupFormProps) {
           className="btn-primary flex-1 flex items-center justify-center gap-2"
         >
           {loading ? (
-            <span className="text-xs">Salvando...</span>
+            <span className="flex items-center gap-2"><Spinner size="sm" /> Salvando...</span>
           ) : (
             <span>{isEdit ? "Salvar alteracoes" : "Criar setup"}</span>
           )}
