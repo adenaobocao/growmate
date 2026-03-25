@@ -15,6 +15,17 @@ export default async function AppLayout({
     redirect("/login");
   }
 
+  // Check onboarding
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("onboarding_done")
+    .eq("id", user.id)
+    .single();
+
+  if (profile && !profile.onboarding_done) {
+    redirect("/onboarding");
+  }
+
   return (
     <div className="flex justify-center min-h-screen">
       <div className="w-full max-w-[430px] min-h-screen flex flex-col relative z-10">
