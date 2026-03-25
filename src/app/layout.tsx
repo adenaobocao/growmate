@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -43,6 +44,19 @@ export default function RootLayout({
       <body className="antialiased">
         <ThemeProvider>
           {children}
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              style: {
+                background: "rgb(var(--color-surface))",
+                border: "1px solid rgb(var(--color-border-strong))",
+                color: "rgb(var(--color-text))",
+                fontFamily: "'Space Grotesk', system-ui, sans-serif",
+                fontSize: "0.8125rem",
+              },
+            }}
+            gap={8}
+          />
         </ThemeProvider>
       </body>
     </html>

@@ -53,6 +53,7 @@ const config: Config = {
         "pulse-glow": "pulse-glow 2.6s ease-in-out infinite",
         "fade-in": "fade-in 0.18s ease-out",
         "slide-up": "slide-up 0.2s ease-out",
+        shimmer: "shimmer 1.5s ease-in-out infinite",
       },
       keyframes: {
         float: {
@@ -70,6 +71,11 @@ const config: Config = {
         "slide-up": {
           from: { transform: "translateY(12px)" },
           to: { transform: "translateY(0)" },
+        },
+        shimmer: {
+          "0%": { opacity: "0.4" },
+          "50%": { opacity: "0.7" },
+          "100%": { opacity: "0.4" },
         },
       },
     },

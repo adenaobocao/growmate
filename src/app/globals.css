@@ -189,6 +189,35 @@
     outline-offset: 2px;
   }
 
+  /* Danger button */
+  .btn-danger {
+    background: rgb(var(--color-danger));
+    color: white;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    height: 44px;
+    padding: 0 24px;
+    border-radius: var(--radius-lg);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s, transform 0.1s;
+    font-family: "Space Grotesk", system-ui, sans-serif;
+  }
+  .btn-danger:hover { opacity: 0.9; }
+  .btn-danger:active { transform: scale(0.97); }
+  .btn-danger:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Small button variant */
+  .btn-sm {
+    height: 36px;
+    padding: 0 16px;
+    font-size: 0.75rem;
+    border-radius: var(--radius-md);
+  }
+
   /* Form field */
   .field {
     display: flex;
@@ -234,6 +263,65 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Typography scale */
+  .text-page-title {
+    font-family: "Syne", system-ui, sans-serif;
+    font-size: 1.375rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: rgb(var(--color-text));
+  }
+  .text-section-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: rgb(var(--color-text-secondary));
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .text-body {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: rgb(var(--color-text));
+  }
+  .text-body-sm {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: rgb(var(--color-text-secondary));
+  }
+  .text-caption {
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    color: rgb(var(--color-text-tertiary));
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    gap: 12px;
+  }
+  .empty-state p {
+    font-size: 0.8125rem;
+    color: rgb(var(--color-text-secondary));
+    max-width: 260px;
   }
 }
 
