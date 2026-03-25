@@ -33,7 +33,7 @@ export function ForgotPasswordForm() {
     return (
       <div className="w-full max-w-sm mx-auto text-center">
         <div className="w-16 h-16 rounded-2xl bg-grow-primary/10 border border-grow-primary/20 flex items-center justify-center mx-auto mb-5">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#29b554" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-grow-primary">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
             <polyline points="22 4 12 14.01 9 11.01" />
           </svg>
@@ -69,7 +69,7 @@ export function ForgotPasswordForm() {
       </div>
 
       {error && (
-        <div className="text-xs text-grow-rose bg-grow-rose/10 border border-grow-rose/20 rounded-xl px-3 py-2.5 font-semibold">
+        <div className="text-xs text-grow-danger bg-grow-danger/10 border border-grow-danger/20 rounded-xl px-3 py-2.5 font-semibold">
           {error}
         </div>
       )}

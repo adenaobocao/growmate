@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function HomePage() {
@@ -23,7 +24,7 @@ export default async function HomePage() {
             height={200}
             className="w-full h-full object-contain animate-float"
             style={{
-              filter: "drop-shadow(0 0 40px rgba(41,181,84,0.50)) drop-shadow(0 24px 40px rgba(0,0,0,0.70))",
+              filter: "drop-shadow(0 0 40px rgb(var(--color-glow))) drop-shadow(0 24px 40px rgba(0,0,0,0.70))",
             }}
           />
         </div>
@@ -36,10 +37,11 @@ export default async function HomePage() {
         </p>
 
         {/* Quick action - start chat */}
-        <button
+        <Link
+          href="/chat"
           className="btn-primary px-7 py-3 mt-8 flex items-center gap-2 text-sm"
           style={{
-            background: "linear-gradient(270deg, #29b554, #4ecb68, #7ed348, #aee84a, #7ed348, #4ecb68, #29b554)",
+            background: "linear-gradient(270deg, rgb(var(--color-primary)), rgb(var(--color-secondary)), rgb(var(--color-primary)))",
             backgroundSize: "500% 100%",
             animation: "btnFlow 8s linear infinite",
           }}
@@ -48,7 +50,7 @@ export default async function HomePage() {
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
           Comecar a conversar
-        </button>
+        </Link>
 
         <style>{`
           @keyframes btnFlow {

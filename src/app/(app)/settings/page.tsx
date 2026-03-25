@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "./logout-button";
+import { ThemeSection } from "./theme-section";
 
 export default async function SettingsPage() {
   const supabase = createClient();
@@ -66,18 +67,21 @@ export default async function SettingsPage() {
           </div>
         </div>
 
+        {/* Theme */}
+        <ThemeSection />
+
         {/* Actions */}
         <div className="card flex flex-col gap-0">
-          <button className="flex items-center gap-3 py-3 px-1 border-b border-grow-border text-left w-full">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a7a62" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <button className="flex items-center gap-3 py-3 px-1 border-b border-grow-border text-left w-full text-grow-muted">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
             <span className="text-xs font-semibold text-grow-text">Editar perfil</span>
           </button>
 
-          <button className="flex items-center gap-3 py-3 px-1 border-b border-grow-border text-left w-full">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a7a62" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <button className="flex items-center gap-3 py-3 px-1 border-b border-grow-border text-left w-full text-grow-muted">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
             <span className="text-xs font-semibold text-grow-text">Suporte</span>

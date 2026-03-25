@@ -9,8 +9,8 @@ export default function AuthLayout({
     <div className="min-h-screen flex flex-col items-center justify-center px-6">
       {/* Ambient glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute -left-[8vw] -top-[8vw] w-[55vw] h-[55vw] rounded-full blur-[90px] opacity-[0.12] bg-[rgba(41,181,84,0.25)]" />
-        <div className="absolute -right-[8vw] -bottom-[8vw] w-[55vw] h-[55vw] rounded-full blur-[90px] opacity-[0.12] bg-[rgba(126,211,72,0.15)]" />
+        <div className="absolute -left-[8vw] -top-[8vw] w-[55vw] h-[55vw] rounded-full blur-[90px] opacity-[0.12] bg-grow-primary/25" />
+        <div className="absolute -right-[8vw] -bottom-[8vw] w-[55vw] h-[55vw] rounded-full blur-[90px] opacity-[0.12] bg-grow-secondary/15" />
       </div>
 
       <div className="relative z-10 w-full max-w-sm">

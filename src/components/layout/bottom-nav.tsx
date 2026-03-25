@@ -69,10 +69,10 @@ export function BottomNav() {
   }
 
   return (
-    <nav className="flex-shrink-0 bg-[rgba(4,9,5,0.96)] border-t border-grow-border backdrop-blur-[26px] pb-[calc(12px+env(safe-area-inset-bottom))] pt-2 px-2.5 z-20 relative">
+    <nav className="flex-shrink-0 bg-grow-bg/95 border-t border-grow-border backdrop-blur-[26px] pb-[calc(12px+env(safe-area-inset-bottom))] pt-2 px-2.5 z-20 relative">
       {/* Glow effect */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse 80% 120% at 50% 120%, rgba(41,181,84,0.07), transparent 70%)"
+        background: "radial-gradient(ellipse 80% 120% at 50% 120%, rgb(var(--color-tint)), transparent 70%)"
       }} />
 
       <div className="w-full max-w-[430px] mx-auto flex justify-around relative z-10">
@@ -83,7 +83,7 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 px-1 transition-colors ${
-                active ? "text-grow-text" : "text-[#3d5e45]"
+                active ? "text-grow-text" : "text-grow-tertiary"
               }`}
             >
               <span className={`transition-transform ${active ? "scale-110" : ""}`}>
@@ -92,7 +92,7 @@ export function BottomNav() {
               <span className="relative text-[9px] font-bold tracking-wider uppercase pb-1">
                 {item.label}
                 {active && (
-                  <span className="absolute left-0 right-0 bottom-0 h-[2.5px] rounded-full bg-grow-primary shadow-[0_0_8px_rgba(41,181,84,0.55)]" />
+                  <span className="absolute left-0 right-0 bottom-0 h-[2.5px] rounded-full bg-grow-primary shadow-[0_0_8px_rgb(var(--color-glow))]" />
                 )}
               </span>
             </Link>

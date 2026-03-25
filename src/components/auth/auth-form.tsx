@@ -40,7 +40,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         if (password.length < 6) {
           throw new Error("A senha deve ter pelo menos 6 caracteres.");
         }
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -48,7 +48,14 @@ export function AuthForm({ mode }: AuthFormProps) {
           },
         });
         if (error) throw error;
-        setSuccess("Conta criada! Verifique seu email para confirmar.");
+
+        // Se confirmacao de email esta desativada, Supabase ja retorna sessao
+        if (data.session) {
+          router.push("/");
+          router.refresh();
+        } else {
+          setSuccess("Conta criada! Verifique seu email para confirmar.");
+        }
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro inesperado.";
@@ -118,7 +125,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
 
       {error && (
-        <div className="text-xs text-grow-rose bg-grow-rose/10 border border-grow-rose/20 rounded-xl px-3 py-2.5 font-semibold">
+        <div className="text-xs text-grow-danger bg-grow-danger/10 border border-grow-danger/20 rounded-xl px-3 py-2.5 font-semibold">
           {error}
         </div>
       )}
