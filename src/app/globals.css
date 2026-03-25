@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;900&family=Syne:wght@700;800;900&display=swap');
+
+@layer base {
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-grow-bg text-grow-text font-sans;
+    background: radial-gradient(ellipse 100% 40% at 50% -10%, var(--tw-colors-grow-tint, rgba(41,181,84,0.07)), transparent 70%), #060d07;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(41,181,84,0.12);
+    border-radius: 99px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(41,181,84,0.12) transparent;
+  }
+
+  /* Remove tap highlight on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  /* Glass panel effect */
+  .glass {
+    @apply bg-grow-panel backdrop-blur-[26px] border border-grow-border;
+  }
+
+  /* Card base */
+  .card {
+    @apply bg-[rgba(10,22,12,0.55)] border border-[rgba(41,181,84,0.09)] rounded-2xl p-3.5 relative overflow-hidden;
+  }
+  .card::before {
+    content: "";
+    @apply absolute top-0 left-0 right-0 h-px;
+    background: linear-gradient(90deg, transparent, rgba(41,181,84,0.15), transparent);
+  }
+
+  /* Primary button gradient */
+  .btn-primary {
+    @apply h-11 rounded-2xl border-0 font-bold text-xs cursor-pointer font-sans text-white;
+    background: linear-gradient(90deg, #29b554, #7ed348);
+    box-shadow: 0 4px 14px rgba(41,181,84,0.24);
+  }
+  .btn-primary:active {
+    @apply scale-[0.97];
+  }
+  .btn-primary:disabled {
+    @apply opacity-35 cursor-not-allowed;
+  }
+
+  /* Ghost button */
+  .btn-ghost {
+    @apply h-11 rounded-2xl border border-[rgba(41,181,84,0.12)] bg-transparent text-[#7aaa82] font-bold text-xs cursor-pointer font-sans;
+  }
+
+  /* Form field */
+  .field {
+    @apply bg-[rgba(6,12,7,0.55)] border border-[rgba(41,181,84,0.10)] rounded-2xl p-3 mb-2;
+  }
+  .field label {
+    @apply block text-[10px] text-grow-muted font-bold uppercase tracking-wider;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    @apply mt-1.5 w-full bg-transparent border-0 outline-none text-grow-text font-sans text-sm font-semibold;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder {
+    @apply text-grow-muted;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    @apply ring-0;
+  }
+  .field select option {
+    background: #08100a;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
