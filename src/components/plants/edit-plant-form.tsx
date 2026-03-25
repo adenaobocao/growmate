@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import type {
   Plant,
   PlantPhase,
@@ -64,11 +66,12 @@ export function EditPlantForm({ plant }: { plant: Plant }) {
       .eq("id", plant.id);
 
     if (updateError) {
-      setError("Erro ao atualizar planta. Tente novamente.");
+      toast.error("Erro ao atualizar planta.");
       setLoading(false);
       return;
     }
 
+    toast.success("Planta atualizada!");
     router.push(`/plants/${plant.id}`);
     router.refresh();
   }
@@ -195,7 +198,7 @@ export function EditPlantForm({ plant }: { plant: Plant }) {
           className="btn-primary flex-1 flex items-center justify-center gap-2"
         >
           {loading ? (
-            <span className="text-xs">Salvando...</span>
+            <span className="flex items-center gap-2"><Spinner size="sm" /> Salvando...</span>
           ) : (
             <span>Salvar</span>
           )}

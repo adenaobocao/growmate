@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 import type { PlantPhase } from "@/types/database";
 import { PLANT_PHASES } from "@/lib/constants";
 
@@ -58,8 +59,9 @@ export function PlantPhaseSelector({
 
     if (error) {
       setPhase(currentPhase);
-      alert("Erro ao atualizar fase.");
+      toast.error("Erro ao atualizar fase.");
     } else {
+      toast.success(`Fase atualizada para ${PLANT_PHASES[newPhase].label}!`);
       router.refresh();
     }
 

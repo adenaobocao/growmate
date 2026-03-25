@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import type { PlantPhase, PlantGenType, SubstrateType } from "@/types/database";
 import { PLANT_PHASES, PLANT_GENETICS, SUBSTRATES } from "@/lib/constants";
 
@@ -65,11 +67,12 @@ export function AddPlantForm() {
     });
 
     if (insertError) {
-      setError("Erro ao criar planta. Tente novamente.");
+      toast.error("Erro ao criar planta.");
       setLoading(false);
       return;
     }
 
+    toast.success("Planta criada!");
     router.push("/plants");
     router.refresh();
   }
@@ -189,7 +192,7 @@ export function AddPlantForm() {
           className="btn-primary w-full flex items-center justify-center gap-2"
         >
           {loading ? (
-            <span className="text-xs">Criando...</span>
+            <span className="flex items-center gap-2"><Spinner size="sm" /> Criando...</span>
           ) : (
             <>
               <svg

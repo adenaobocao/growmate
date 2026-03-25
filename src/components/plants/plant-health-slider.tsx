@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 import { getHealthColor } from "@/lib/constants";
 
 export function PlantHealthSlider({
@@ -41,7 +42,7 @@ export function PlantHealthSlider({
       .eq("id", plantId);
 
     if (error) {
-      alert("Erro ao atualizar saude.");
+      toast.error("Erro ao atualizar saude.");
       setHealth(currentHealth);
     } else {
       router.refresh();
